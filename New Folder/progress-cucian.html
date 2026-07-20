@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Cucian - Laundry Premium</title>
+    <style>
+        :root {
+            --card: #FFFFFF;
+            --ink: #1F2A37;
+            --sub: #7686A0;
+            --line: #E3ECF7;
+            --blue: #2F6FE4;
+            --blue-deep: #1D4FB0;
+            --blue-soft: #EAF2FE;
+            --sky: #4A90D9;
+            --done: #1BA97A;
+            --done-soft: #E4F5EE;
+            --pending: #C7CFDA;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--ink);
+            min-height: 100vh;
+            font-size: 13px;
+            background:
+                radial-gradient(circle at 12% 8%, rgba(47, 111, 228, 0.14), transparent 38%),
+                radial-gradient(circle at 90% 15%, rgba(74, 144, 217, 0.10), transparent 42%),
+                linear-gradient(180deg, #F4F8FE 0%, #F9FBFF 45%, #FFFFFF 100%);
+            padding: 24px 14px 48px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 18%, rgba(74, 144, 217, 0.08), transparent 20%),
+                radial-gradient(circle at 80% 28%, rgba(47, 111, 228, 0.06), transparent 18%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .back-pill {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ffffff, #f4f8ff);
+            border: 1px solid rgba(47, 111, 228, 0.18);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue);
+            box-shadow: 0 8px 18px rgba(31, 42, 55, 0.06);
+            font-size: 16px;
+            flex: none;
+            text-decoration: none;
+            transition: transform .22s ease;
+        }
+
+        .back-pill:hover {
+            transform: translateY(-1px);
+        }
+
+        .topbar h1 {
+            font-size: 17px;
+            margin: 0;
+        }
+
+        .topbar p {
+            margin: 2px 0 0;
+            font-size: 11.5px;
+            color: var(--sub);
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 16px 18px 6px;
+            box-shadow: 0 8px 22px rgba(31, 42, 55, 0.06);
+            margin-bottom: 14px;
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            flex: none;
+            background: linear-gradient(135deg, var(--blue), var(--sky));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .card-head .name {
+            font-weight: 600;
+            font-size: 13.5px;
+        }
+
+        .card-head .code {
+            font-size: 11px;
+            color: var(--sub);
+            margin-top: 1px;
+        }
+
+        .status-chip {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--done);
+            background: var(--done-soft);
+            padding: 4px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        table.detail {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 4px 0 10px;
+        }
+
+        table.detail tr td {
+            padding: 6px 0;
+            font-size: 12.5px;
+            vertical-align: top;
+        }
+
+        table.detail tr td:first-child {
+            color: var(--sub);
+            width: 42%;
+        }
+
+        table.detail tr td:last-child {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        table.detail tr+tr td {
+            border-top: 1px dashed var(--line);
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin: 18px 0 4px 2px;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 3px;
+            height: 14px;
+            background: var(--blue);
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .timeline {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 16px 18px 20px;
+            box-shadow: 0 8px 22px rgba(31, 42, 55, 0.06);
+        }
+
+        .t-item {
+            display: grid;
+            grid-template-columns: 62px 20px 1fr;
+            column-gap: 2px;
+        }
+
+        .t-time {
+            font-size: 11px;
+            color: var(--sub);
+            padding-top: 1px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .t-rail {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .t-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 2px;
+            flex: none;
+            background: var(--pending);
+            border: 2px solid var(--card);
+            box-shadow: 0 0 0 1px var(--pending);
+        }
+
+        .t-item.done .t-dot {
+            background: var(--done);
+            box-shadow: 0 0 0 1px var(--done);
+        }
+
+        .t-item.current .t-dot {
+            background: var(--sky);
+            box-shadow: 0 0 0 3px rgba(62, 124, 177, 0.18);
+            width: 12px;
+            height: 12px;
+            margin-top: 1px;
+        }
+
+        .t-connector {
+            width: 2px;
+            flex: 1;
+            background: var(--line);
+            margin: 2px 0;
+        }
+
+        .t-item.done .t-connector { background: var(--done); }
+        .t-item:last-child .t-connector { display: none; }
+
+        .t-body { padding-bottom: 20px; }
+        .t-item:last-child .t-body { padding-bottom: 0; }
+
+        .t-title {
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: var(--pending);
+            font-weight: 500;
+        }
+
+        .t-item.done .t-title { color: var(--done); font-weight: 600; }
+        .t-item.current .t-title { color: var(--sky); font-weight: 700; }
+
+        .t-sub {
+            font-size: 11px;
+            color: var(--sub);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        .footnote {
+            text-align: center;
+            font-size: 10.5px;
+            color: var(--sub);
+            margin-top: 14px;
+        }
+
+        @media (prefers-reduced-motion:no-preference) {
+            .card, .timeline {
+                animation: rise .4s ease both;
+            }
+            .timeline { animation-delay: .06s; }
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="topbar">
+            <a href="lacak_pesanan.html" class="back-pill">←</a>
+            <div>
+                <h1>Progress Cucian</h1>
+                <p>Pantau status cucianmu secara langsung</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-head">
+                <div class="thumb">🧺</div>
+                <div>
+                    <div class="name">Cuci + Setrika Reguler</div>
+                    <div class="code">Order #LDR-20260713-014</div>
+                </div>
+                <div class="status-chip">Sedang Dicuci</div>
+            </div>
+
+            <table class="detail">
+                <tr><td>Nama Pelanggan</td><td>Dewi</td></tr>
+                <tr><td>Berat Cucian</td><td>4.2 kg</td></tr>
+                <tr><td>Layanan</td><td>Cuci Kering + Setrika</td></tr>
+                <tr><td>Tanggal Masuk</td><td>13 Jul 2026, 09.10</td></tr>
+                <tr><td>Estimasi Selesai</td><td>15 Jul 2026, 18.00</td></tr>
+                <tr><td>Total Biaya</td><td>Rp 15.000</td></tr>
+            </table>
+        </div>
+
+        <div class="section-title">Status Pesanan</div>
+
+        <div class="timeline">
+            <div class="t-item current">
+                <div class="t-time">13 Jul<br>18.40</div>
+                <div class="t-rail">
+                    <div class="t-dot"></div>
+                    <div class="t-connector"></div>
+                </div>
+                <div class="t-body">
+                    <div class="t-title">Cucian sedang dalam proses pencucian.</div>
+                    <div class="t-sub">Cucianmu sedang dicuci menggunakan deterjen pilihan.</div>
+                </div>
+            </div>
+
+            <div class="t-item done">
+                <div class="t-time">13 Jul<br>09.25</div>
+                <div class="t-rail">
+                    <div class="t-dot"></div>
+                    <div class="t-connector"></div>
+                </div>
+                <div class="t-body">
+                    <div class="t-title">Cucian telah ditimbang dan dicatat.</div>
+                    <div class="t-sub">Berat cucian 4.2 kg, layanan Cuci Kering + Setrika.</div>
+                </div>
+            </div>
+
+            <div class="t-item done">
+                <div class="t-time">13 Jul<br>09.10</div>
+                <div class="t-rail">
+                    <div class="t-dot"></div>
+                    <div class="t-connector"></div>
+                </div>
+                <div class="t-body">
+                    <div class="t-title">Pesanan diterima oleh outlet.</div>
+                    <div class="t-sub">Cucian diterima di Laundry Premium, siap diproses.</div>
+                </div>
+            </div>
+
+            <div class="t-item done">
+                <div class="t-time">13 Jul<br>08.55</div>
+                <div class="t-rail">
+                    <div class="t-dot"></div>
+                </div>
+                <div class="t-body">
+                    <div class="t-title">Pesanan dibuat oleh pelanggan.</div>
+                    <div class="t-sub">Menunggu cucian diantar/diterima outlet.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footnote">Data hanya tercatat di panel admin - Laundry Premium</div>
+    </div>
+</body>
+
+</html>
